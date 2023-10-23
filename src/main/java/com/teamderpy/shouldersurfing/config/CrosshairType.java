@@ -18,7 +18,7 @@ public enum CrosshairType
 	{
 		if(this == CrosshairType.ADAPTIVE)
 		{
-			return ShoulderHelper.isHoldingAdaptiveItem();
+			return ShoulderHelper.isHoldingAdaptiveItem() || ShoulderHelper.isRidingRangedAttackMob();
 		}
 		else if(this == CrosshairType.DYNAMIC || this == CrosshairType.DYNAMIC_WITH_1PP)
 		{
