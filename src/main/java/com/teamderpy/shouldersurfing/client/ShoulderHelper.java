@@ -29,7 +29,7 @@ import org.lwjgl.input.Mouse;
 public class ShoulderHelper
 {
 	public static final float DEG_TO_RAD = ((float)Math.PI / 180F);
-	private static final Predicate<Entity> ENTITY_IS_PICKABLE = Predicates.and(EntitySelectors.NOT_SPECTATING, entity -> entity != null && entity.canBeCollidedWith());
+	private static final Predicate<Entity> ENTITY_IS_PICKABLE = Predicates.and(EntitySelectors.NOT_SPECTATING, entity -> entity != null && entity.canBeCollidedWith() && entity.getControllingPassenger() != Minecraft.getMinecraft().getRenderViewEntity());
 	private static final ResourceLocation PULL_PROPERTY = new ResourceLocation("pull");
 	private static final ResourceLocation THROWING_PROPERTY = new ResourceLocation("throwing");
 	private static final ResourceLocation CHARGED_PROPERTY = new ResourceLocation("charged");
@@ -142,6 +142,13 @@ public class ShoulderHelper
 		}
 		
 		List<Entity> entities = Minecraft.getMinecraft().world.getEntitiesInAABBexcluding(cameraEntity, aabb, ENTITY_IS_PICKABLE);
+//		if (cameraEntity.isRiding()) {
+//			if (Config.CLIENT.getRangedAttackMountsClasses().contains(cameraEntity.getRidingEntity().getClass())) {
+//				entities.remove(cameraEntity.getRidingEntity().getClass());
+//			}
+//		}
+//		System.out.println(entities);
+
 		Vec3d entityHitVec = null;
 		Entity entityResult = null;
 		double minEntityReachSq = playerReachSq;
@@ -150,7 +157,7 @@ public class ShoulderHelper
 		{
 			AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow(entity.getCollisionBorderSize());
 			RayTraceResult raytraceresult = axisalignedbb.calculateIntercept(from, to);
-			
+
 			if(axisalignedbb.contains(eyePosition))
 			{
 				if(minEntityReachSq >= 0.0D)
@@ -163,7 +170,7 @@ public class ShoulderHelper
 			else if(raytraceresult != null)
 			{
 				double distanceSq = eyePosition.squareDistanceTo(raytraceresult.hitVec);
-				
+
 				if(distanceSq < minEntityReachSq || minEntityReachSq == 0.0D)
 				{
 					if(entity == cameraEntity.getRidingEntity() && !entity.canRiderInteract())
@@ -239,7 +246,9 @@ public class ShoulderHelper
 			if (minecraft.getRenderViewEntity().isRiding()) {
 				List<String> mountList = Config.CLIENT.getRangedAttackMounts();
 				for (String mountType : mountList) {
-					return EntityList.getClass(new ResourceLocation(mountType)) == minecraft.getRenderViewEntity().getRidingEntity().getClass() && Mouse.isButtonDown(1);
+					if (EntityList.getClass(new ResourceLocation(mountType)).equals(minecraft.getRenderViewEntity().getRidingEntity().getClass())) {
+						return Mouse.isButtonDown(1);
+					}
 				}
 			}
 		}

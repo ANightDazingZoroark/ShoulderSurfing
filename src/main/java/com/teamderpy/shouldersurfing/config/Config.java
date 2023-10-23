@@ -1,12 +1,16 @@
 package com.teamderpy.shouldersurfing.config;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Lists;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.init.Items;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -343,6 +347,12 @@ public class Config
 
 		public List<String> getRangedAttackMounts() {
 			return this.rangedAttackMounts.get();
+		}
+
+		public List<Class<? extends Entity>> getRangedAttackMountsClasses() {
+			List<Class<? extends Entity>> classList = new ArrayList<>();
+			for (String entityId : this.rangedAttackMounts.get()) classList.add(EntityList.getClass(new ResourceLocation(entityId)));
+			return classList;
 		}
 		
 		public boolean doCompatibilityValkyrienSkiesCameraShipCollision()
