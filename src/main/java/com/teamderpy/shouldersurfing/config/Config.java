@@ -53,6 +53,7 @@ public class Config
 		private DoubleValue customRaytraceDistance;
 		private BooleanValue useCustomRaytraceDistance;
 		private ConfigValue<List<String>> adaptiveCrosshairItems;
+		private ConfigValue<List<String>> rangedAttackMounts;
 		private final Map<Perspective, ConfigValue<CrosshairVisibility>> crosshairVisibility = new HashMap<Perspective, ConfigValue<CrosshairVisibility>>();
 		private BooleanValue compatibilityValkyrienSkiesCameraShipCollision;
 		
@@ -339,6 +340,10 @@ public class Config
 		{
 			return this.adaptiveCrosshairItems.get();
 		}
+
+		public List<String> getRangedAttackMounts() {
+			return this.rangedAttackMounts.get();
+		}
 		
 		public boolean doCompatibilityValkyrienSkiesCameraShipCollision()
 		{
@@ -470,6 +475,8 @@ public class Config
 				Items.FISHING_ROD.getRegistryName().toString(),
 				Items.LINGERING_POTION.getRegistryName().toString()
 			}));
+
+			this.rangedAttackMounts = new ListValue(this.config.get(Configuration.CATEGORY_GENERAL, "Mounts with built-in ranged attack", new String[]{}));
 			
 			String[] visibilities = ClientConfig.toStringArray(CrosshairVisibility.values());
 			

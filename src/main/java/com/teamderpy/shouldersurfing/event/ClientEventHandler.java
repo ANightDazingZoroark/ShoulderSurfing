@@ -1,5 +1,6 @@
 package com.teamderpy.shouldersurfing.event;
 
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 
 import com.teamderpy.shouldersurfing.client.KeyHandler;
@@ -21,6 +22,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Mouse;
 
 @SideOnly(Side.CLIENT)
 public class ClientEventHandler
@@ -28,9 +30,13 @@ public class ClientEventHandler
 	@SubscribeEvent
 	public void clientTickEvent(ClientTickEvent event)
 	{
-		if(event.phase.equals(Phase.START))
-		{
-			ShoulderInstance.getInstance().tick();
+		if(event.phase.equals(Phase.START)) ShoulderInstance.getInstance().tick();
+		if (event.phase == TickEvent.Phase.END && Minecraft.getMinecraft().world != null && Minecraft.getMinecraft().currentScreen == null) {
+			boolean rightButtonDown = Mouse.isButtonDown(1);
+			if (!rightButtonDown && !ShoulderInstance.getInstance().canUseMountAim() && Minecraft.getMinecraft().getRenderViewEntity().isRiding()) {
+				ShoulderInstance.getInstance().setCanUseMountAim(true);
+			}
+			if (!Minecraft.getMinecraft().getRenderViewEntity().isRiding()) ShoulderInstance.getInstance().setCanUseMountAim(false);
 		}
 	}
 	

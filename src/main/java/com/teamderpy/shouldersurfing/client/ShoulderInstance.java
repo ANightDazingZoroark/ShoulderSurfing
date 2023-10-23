@@ -14,6 +14,7 @@ public class ShoulderInstance
 	private boolean doShoulderSurfing;
 	private boolean doSwitchPerspective;
 	private boolean isAiming;
+	private boolean canUseMountAim = false;
 	private double offsetX = Config.CLIENT.getOffsetX();
 	private double offsetY = Config.CLIENT.getOffsetY();
 	private double offsetZ = Config.CLIENT.getOffsetZ();
@@ -42,7 +43,7 @@ public class ShoulderInstance
 			this.doSwitchPerspective = false;
 		}
 		
-		this.isAiming = ShoulderHelper.isHoldingAdaptiveItem();
+		this.isAiming = ShoulderHelper.isHoldingAdaptiveItem() || (ShoulderHelper.isRidingRangedAttackMob() && this.canUseMountAim);
 		
 		if(this.isAiming && Config.CLIENT.getCrosshairType().doSwitchPerspective() && this.doShoulderSurfing)
 		{
@@ -80,9 +81,16 @@ public class ShoulderInstance
 		this.doShoulderSurfing = doShoulderSurfing;
 	}
 	
-	public boolean isAiming()
-	{
+	public boolean isAiming() {
 		return this.isAiming;
+	}
+
+	public void setCanUseMountAim(boolean value) {
+		this.canUseMountAim = value;
+	}
+
+	public boolean canUseMountAim() {
+		return this.canUseMountAim;
 	}
 	
 	public double getOffsetX()

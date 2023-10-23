@@ -11,6 +11,7 @@ import com.teamderpy.shouldersurfing.plugin.ShoulderSurfingRegistrar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -22,6 +23,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Mouse;
 
 @SideOnly(Side.CLIENT)
 public class ShoulderHelper
@@ -227,6 +229,20 @@ public class ShoulderHelper
 			return result;
 		}
 		
+		return false;
+	}
+
+	public static boolean isRidingRangedAttackMob() {
+		Minecraft minecraft = Minecraft.getMinecraft();
+
+		if (minecraft.getRenderViewEntity() instanceof EntityLivingBase) {
+			if (minecraft.getRenderViewEntity().isRiding()) {
+				List<String> mountList = Config.CLIENT.getRangedAttackMounts();
+				for (String mountType : mountList) {
+					return EntityList.getClass(new ResourceLocation(mountType)) == minecraft.getRenderViewEntity().getRidingEntity().getClass() && Mouse.isButtonDown(1);
+				}
+			}
+		}
 		return false;
 	}
 	
